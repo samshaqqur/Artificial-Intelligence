@@ -1,0 +1,1890 @@
+#include "stdafx.h"
+#include <iostream>
+#include <fstream>
+#include <cstdlib> 
+#include  <string>
+#include  <array>
+#include  <ctime>
+#include  <time.h>
+#include  <stdlib.h>
+#include <windows.h>
+using namespace std;
+
+class sudoku {
+private:
+	int AnwArray[9][9];// In this array the answers of the game will be stored
+	int SudArray[9][9];// The values will be inserted in this Array
+	int number; // The number that the Player will enter to the game
+	int row; // The Player will enter the row number to Insert the number to the row
+	int column; // The Player will enter the column number to Insert the number to the column
+	int choice; // The Player will choose the difficulty for the game
+	int c = 1; // This is a counter that will count the games that have been played
+	int average; // The average of the games played will be stored in here
+public:
+
+	void StartGame() {
+		bool win = false; // boolean Variable stores in false untill the user has no more place to enter 
+		int score = 100;
+		SudMenu();// Asks user to choose a level and randomly picks one game from 10 games on the level depending on the level.
+			while ((!win == true) && !checkValues(SudArray) == true) // While loop doesn't end untill there is no more empty cells
+			{
+				printSud(SudArray); // prints the sudoku game board
+				cout << "" << endl;
+				cout << "Score is: " << score << endl; // prints out the score
+				cout << "" << endl;
+				cout << "Enter: 1-continue, 22-Quit Game, 3-New Game " << endl; 
+				int y; // int varibles that store value : if [1] continue gamae else if [22] quit the game and [3] for a new game
+				cin >> y;
+				if (y == 1) {}
+				if (y == 22) { score = 110; break; }
+				if (y == 3) { StartGame(); }
+
+				cout << "Please enter the Row number: " ; 
+				cin >> row; // prompts the user to enter a row number
+				cout << "" << endl;
+				cout << "Please enter the Column number : " ;
+				cin >> column; // prompts the user to enter a Column number
+				cout << "" << endl;
+				cout << "Please enter the number: " ;
+				cin >> number; // prompts the user to enter his answer for the game
+
+				for (int i = 0; i <= 8; i++)
+				{
+					for (int j = 0; j <= 8; j++)
+					{
+						if (row == i && column == j && SudArray[i][j] == 0 && number == AnwArray[i][j]) {
+							// once the row and column equals the cell in arrray 
+							// check if the number is equalled to the same in the Answers array 
+							// and check if the sudoku array cell equals zero
+							// If all true replace the number with cell value
+							SudArray[i][j] = number;
+							cout << "" << endl;
+							cout << "---------------------" << endl;
+							cout << "Correct!!" << endl;
+							cout << "" << endl;
+							win = true;
+
+						}
+						else if (row == i && column == j && SudArray[i][j] == 0 && number != AnwArray[i][j])
+						{
+							// once the row and column equals the cell in arrray 
+							// check if the number is not equalled to the same in the Answers array 
+// and check if the sudoku array cell equals zero
+							// If all true tell the player the answer                        is incorrect and take 5 from the score
+							cout << "" << endl;
+							cout << "---------------------" << endl;
+							cout << "InCorrect, Please Try Again!" << endl;
+							cout << "" << endl;
+							score = score - 5;
+						}
+						else {
+							win = false;
+						}
+					}
+				}
+			
+		}
+			if (score != 110) {
+				average = score / c;
+				cout << "Average score is: " << average << endl;// prints out the average of score of the levels
+			} 			
+	if (score == 100) { cout << "Excellent Player, should try next level" << endl; c++; StartGame(); }
+			else if (score >= 80 && score < 100) { cout << "Good Player, keep practicing on this level" << endl; c++; StartGame(); }
+			else if (score >= 60 && score < 80) { cout << "Ok Player, keep practicing on this level if you dare" << endl; c++; StartGame(); }
+			else if (score >= 40 && score < 60) { cout << "Well, suggest trying an easier level" << endl; c++; StartGame(); }
+		else if (score<40) { cout << "Watch this video on how to play " <<" https://www.youtube.com/watch?v=Y1pdfli58Kw" << endl;  }
+
+	}
+
+	// Asks user to choose a level and randomly picks one game from 10 games on the level depending on the level.
+	void SudMenu() {
+		cout << "Choose difficulty level : 1- (VeryEasy), 2- (Easy), 3- (Medium), 4- (Hard)" << endl;
+		cin >> choice;
+		if (choice == 1) {
+			// Randomly choose 1-10
+			srand(time(NULL));
+			int x = (rand() % 9) + 1;
+			if (x == 1) {  veryEasy1(AnwArray,SudArray); }
+			if (x == 2) { veryEasy2(AnwArray, SudArray); }
+			if (x == 3) { veryEasy3(AnwArray, SudArray); }
+			if (x == 4) { veryEasy4(AnwArray, SudArray); }
+			if (x == 5) { veryEasy5(AnwArray, SudArray); }
+			if (x == 6) { veryEasy6(AnwArray, SudArray); }
+			if (x == 7) { veryEasy7(AnwArray, SudArray); }
+			if (x == 8) { veryEasy8(AnwArray, SudArray); }
+			if (x == 9) { veryEasy9(AnwArray, SudArray); }
+			if (x == 10) { veryEasy10(AnwArray, SudArray); }
+			cout <<"Level-1 / Game-" <<x << endl;
+			cout << "" << endl;
+
+		}
+		else if (choice == 2) {
+			// Randomly choose 1-10
+			srand(time(NULL));
+			int x = (rand() % 9) + 1;
+			if (x == 1) { Easy1(AnwArray, SudArray); }
+			if (x == 2) { Easy2(AnwArray, SudArray); }
+			if (x == 3) { Easy3(AnwArray, SudArray); }
+			if (x == 4) { Easy4(AnwArray, SudArray); }
+			if (x == 5) { Easy5(AnwArray, SudArray); }
+			if (x == 6) { Easy6(AnwArray, SudArray); }
+			if (x == 7) { Easy7(AnwArray, SudArray); }
+			if (x == 8) { Easy8(AnwArray, SudArray); }
+			if (x == 9) { Easy9(AnwArray, SudArray); }
+			if (x == 10) { Easy10(AnwArray, SudArray); }
+			cout << "Level-2 / Game-" << x << endl;
+		}
+		else if (choice == 3) {
+			// Randomly choose 1-10
+			srand(time(NULL));
+			int x = (rand() % 9) + 1;
+			if (x == 1) { Medium1(AnwArray, SudArray); }
+			if (x == 2) { Medium2(AnwArray, SudArray); }
+			if (x == 3) { Medium3(AnwArray, SudArray); }
+			if (x == 4) { Medium4(AnwArray, SudArray); }
+			if (x == 5) { Medium5(AnwArray, SudArray); }
+			if (x == 6) { Medium6(AnwArray, SudArray); }
+			if (x == 7) { Medium7(AnwArray, SudArray); }
+			if (x == 8) { Medium8(AnwArray, SudArray); }
+			if (x == 9) { Medium9(AnwArray, SudArray); }
+			if (x == 10) { Medium10(AnwArray, SudArray); }
+			cout << "Level-3 / Game-" << x << endl;
+		}
+		else if (choice == 4) {
+			// Randomly choose 1-10
+			srand(time(NULL));
+			int x = (rand() % 9) + 1;
+			if (x == 1) { Hard1(AnwArray, SudArray); }
+			if (x == 2) { Hard2(AnwArray, SudArray); }
+			if (x == 3) { Hard3(AnwArray, SudArray); }
+			if (x == 4) { Hard4(AnwArray, SudArray); }
+			if (x == 5) { Hard5(AnwArray, SudArray); }
+			if (x == 6) { Hard6(AnwArray, SudArray); }
+			if (x == 7) { Hard7(AnwArray, SudArray); }
+			if (x == 8) { Hard8(AnwArray, SudArray); }
+			if (x == 9) { Hard9(AnwArray, SudArray); }
+			if (x == 10) { Hard10(AnwArray, SudArray); }
+			cout << "Level-4 / Game-" << x << endl;
+		}
+		
+	}
+
+	//Check if any remaining blanks(0)
+	bool checkValues(int SudArray[9][9]) {
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (SudArray[i][j] == 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	// Prints The Sudoku Game Grid
+	void printSud(int SudArray[9][9]) {
+		cout << "      0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |" << endl;
+		cout << "     ____________________________________________" << endl;
+		for (int i = 0; i <= 0; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				//if(SudArray[i][j]!=0){	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE);}
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 1; i <= 1; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 2; i <= 2; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 3; i <= 3; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 4; i <= 4; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 5; i <= 5; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 6; i <= 6; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 7; i <= 7; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+		for (int i = 8; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (i == 0 && j == 0) { cout << "0 -> "; }
+				if (i == 1 && j == 0) { cout << "1 -> "; }
+				if (i == 2 && j == 0) { cout << "2 -> "; }
+				if (i == 3 && j == 0) { cout << "3 -> "; }
+				if (i == 4 && j == 0) { cout << "4 -> "; }
+				if (i == 5 && j == 0) { cout << "5 -> "; }
+				if (i == 6 && j == 0) { cout << "6 -> "; }
+				if (i == 7 && j == 0) { cout << "7 -> "; }
+				if (i == 8 && j == 0) { cout << "8 -> "; }
+				cout << " " << SudArray[i][j] << " | ";
+
+			}
+			cout << endl;
+		}
+		cout << "     -------------------------------------------" << endl;
+	}
+	
+
+
+
+	//set color in the grid of the game
+	void setcolor(int SudArray[9][9]) {
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				if (SudArray[i][j] != 0) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED); }
+				if (SudArray[i][j] == 0) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED); }
+			}
+		}
+	}
+
+	// Initialize the Answers array and the game array
+	//Games 1-10 level Very Easy
+	void veryEasy1(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 3,9,2,6,1,5,8,7,4 },
+		{1,6,5,8,4,7,9,3,2},
+		{8,7,4,2,3,9,1,5,6},
+		{5,2,9,4,8,6,3,1,7},
+		{7,4,1,9,5,3,6,2,8},
+		{6,8,3,1,7,2,5,4,9},
+		{4,5,8,7,9,1,2,6,3},
+		{2,1,7,3,6,8,4,9,5},
+		{9,3,6,5,2,4,7,8,1} };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,9,0,0,0,0,8,7,4 },
+	{1,0,0,8,0,7,0,0,0},
+	{8,7,0,2,3,9,1,5,0},
+	{0,0,9,4,0,6,3,1,7},
+	{0,4,1,0,0,0,0,0,0},
+	{0,0,0,1,7,2,5,4,0},
+	{0,5,0,0,0,1,2,0,0},
+	{2,0,0,0,6,8,4,9,0},
+	{0,3,6,5,2,4,7,8,1} };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy2(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,9,1,6,8,3,5,4,7 },
+		{3,6,7,2,5,4,8,1,9},
+		{4,5,8,7,9,1,2,6,3},
+		{7,1,4,9,6,2,3,5,8},
+		{9,3,2,5,4,8,6,7,1},
+		{5,8,6,3,1,7,9,2,4},
+		{8,4,3,1,2,6,7,9,5},
+		{1,2,5,8,7,9,4,3,6},
+		{6,7,9,4,3,5,1,8,2} };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 2,9,0,0,0,3,5,4,7 },
+		{ 3,0,0,0,0,4,8,0,0 },
+		{ 4,5,8,7,0,1,2,0,0 },
+		{ 0,1,4,0,0,2,3,5,0 },
+		{ 0,0,0,5,0,8,0,7,0 },
+		{ 5,0,6,3,1,7,9,2,4 },
+		{ 0,0,3,1,2,6,7,9,5 },
+		{ 0,0,5,0,0,9,0,0,6 },
+		{ 0,7,9,0,0,5,1,8,2 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy3(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 4,3,1,5,9,7,6,8,2 },
+		{ 2,7,9,6,4,8,1,5,3 },
+		{ 6,8,5,1,2,3,9,7,4 },
+		{ 5,6,4,3,1,9,7,2,8 },
+		{ 3,2,7,8,5,6,4,1,9 },
+		{ 9,1,8,4,7,2,5,3,6 },
+		{ 8,4,3,7,6,1,2,9,5 },
+		{ 7,9,6,2,8,5,3,4,1 },
+		{ 1,5,2,9,3,4,8,6,7 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+
+		int SudArray1[9][9] = { { 0,3,0,5,0,0,6,8,2 },
+		{ 0,0,9,6,0,8,1,0,3 },
+		{ 0,8,0,1,2,3,0,7,4 },
+		{ 0,0,0,0,1,0,7,0,8 },
+		{ 0,0,7,8,0,6,0,0,9 },
+		{ 9,1,8,0,7,0,5,3,6 },
+		{ 8,4,0,7,0,1,0,9,5 },
+		{ 7,0,6,2,0,5,3,0,1 },
+		{ 0,5,2,9,0,4,8,6,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy4(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 7,8,1,3,2,6,4,9,5 },
+		{ 5,3,9,7,4,1,8,6,2 },
+		{ 6,4,2,9,8,5,7,1,3 },
+		{ 4,6,7,8,9,2,3,5,1 },
+		{ 3,9,8,1,5,4,2,7,6 },
+		{ 1,2,5,6,3,7,9,4,8 },
+		{ 2,7,4,5,1,3,6,8,9 },
+		{ 9,5,3,4,6,8,1,2,7 },
+		{ 8,1,6,2,7,9,5,3,4 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 7,8,0,0,2,6,0,9,5 },
+		{ 5,0,0,0,0,1,0,6,0 },
+		{ 6,0,0,9,8,5,0,1,3 },
+		{ 4,0,7,0,9,2,0,0,1 },
+		{ 3,0,8,1,0,4,0,0,6 },
+		{ 0,2,0,6,0,0,9,4,8 },
+		{ 2,0,4,5,1,3,6,8,9 },
+		{ 0,0,3,0,0,0,0,2,0 },
+		{ 8,1,6,2,0,9,5,3,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy5(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,9,4,6,8,5,3,1,7 },
+		{ 3,1,5,9,4,7,6,2,8 },
+		{ 7,6,8,1,2,3,5,9,4 },
+		{ 6,7,3,4,5,9,1,8,2 },
+		{ 4,8,9,2,3,1,7,5,6 },
+		{ 5,2,1,8,7,6,4,3,9 },
+		{ 1,4,7,5,9,2,8,6,3 },
+		{ 8,5,2,3,6,4,9,7,1 },
+		{ 9,3,6,7,1,8,2,4,5 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 2,9,4,0,8,5,3,1,7 },
+		{ 3,0,0,0,4,7,0,0,0 },
+		{ 0,0,0,1,2,3,5,0,4 },
+		{ 0,0,3,0,5,9,1,0,2 },
+		{ 4,0,0,2,3,0,0,0,6 },
+		{ 5,2,1,8,7,6,4,3,9 },
+		{ 1,0,7,5,9,2,8,0,0 },
+		{ 8,0,2,0,0,4,9,0,0 },
+		{ 9,0,6,7,1,8,2,4,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy6(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 7,2,3,1,5,6,8,9,4 },
+		{ 5,9,1,8,4,2,6,7,3 },
+		{ 4,6,8,7,9,3,2,1,5 },
+		{ 1,5,7,6,8,4,9,3,2 },
+		{ 3,4,9,2,7,1,5,6,8 },
+		{ 2,8,6,5,3,9,1,4,7 },
+		{ 9,1,4,3,2,5,7,8,6 },
+		{ 6,7,5,4,1,8,3,2,9 },
+		{ 8,3,2,9,6,7,4,5,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,2,3,1,0,6,8,0,0 },
+		{ 0,0,1,0,0,0,6,0,0 },
+		{ 4,0,8,7,0,3,2,1,5 },
+		{ 1,0,7,6,8,0,9,0,2 },
+		{ 0,4,9,0,7,1,0,0,0 },
+		{ 2,0,6,5,0,9,1,4,7 },
+		{ 0,1,0,3,2,0,7,0,6 },
+		{ 6,0,0,0,0,8,3,0,9 },
+		{ 8,3,2,9,6,7,4,5,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy7(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 3,9,2,6,1,5,8,7,4 },
+		{ 1,6,5,8,4,7,9,3,2 },
+		{ 8,7,4,2,3,9,1,5,6 },
+		{ 5,2,9,4,8,6,3,1,7 },
+		{ 7,4,1,9,5,3,6,2,8 },
+		{ 6,8,3,1,7,2,5,4,9 },
+		{ 4,5,8,7,9,1,2,6,3 },
+		{ 2,1,7,3,6,8,4,9,5 },
+		{ 9,3,6,5,2,4,7,8,1 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,9,0,0,0,0,8,7,4 },
+		{ 1,0,0,8,0,7,0,0,0 },
+		{ 8,7,0,2,3,9,1,0,0 },
+		{ 5,0,9,4,0,6,3,1,7 },
+		{ 0,4,1,0,0,0,0,0,0 },
+		{ 0,0,0,1,7,2,5,0,0 },
+		{ 4,5,0,0,0,1,2,0,0 },
+		{ 2,0,0,0,6,8,4,0,0 },
+		{ 9,3,6,5,2,4,7,8,1 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy8(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,9,1,6,8,3,5,4,7 },
+		{ 3,6,7,2,5,4,8,1,9 },
+		{ 4,5,8,7,9,1,2,6,3 },
+		{ 7,1,4,9,6,2,3,5,8 },
+		{ 9,3,2,5,4,8,6,7,1 },
+		{ 5,8,6,3,1,7,9,2,4 },
+		{ 8,4,3,1,2,6,7,9,5 },
+		{ 1,2,5,8,7,9,4,3,6 },
+		{ 6,7,9,4,3,5,1,8,2 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 2,9,0,0,0,3,5,4,7 },
+		{ 3,0,0,0,0,4,8,0,0 },
+		{ 4,5,8,7,0,1,2,0,0 },
+		{ 0,1,4,0,0,2,3,5,0 },
+		{ 0,0,0,5,0,8,0,7,0 },
+		{ 5,0,6,3,1,7,9,2,0 },
+		{ 0,4,3,1,2,6,7,9,5 },
+		{ 0,0,5,0,0,9,0,0,0 },
+		{ 6,7,9,0,0,5,1,8,2 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy9(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 4,7,3,8,2,9,6,1,5 },
+		{ 6,5,2,3,1,7,8,9,4 },
+		{ 9,1,8,6,4,5,3,2,7 },
+		{ 3,2,1,9,5,4,7,6,8 },
+		{ 8,9,4,7,6,3,2,5,1 },
+		{ 7,6,5,1,8,2,4,3,9 },
+		{ 5,3,7,2,9,8,1,4,6 },
+		{ 1,8,9,4,3,6,5,7,2 },
+		{ 2,4,6,5,7,1,9,8,3 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,0,0,2,0,6,0,0 },
+		{ 0,0,0,0,0,7,8,0,4 },
+		{ 0,0,0,0,0,5,3,2,7 },
+		{ 0,0,0,0,0,0,0,6,0 },
+		{ 0,0,0,0,0,0,0,5,0 },
+		{ 0,6,5,0,8,2,4,0,0 },
+		{ 5,0,7,0,9,0,1,0,6 },
+		{ 1,8,0,4,0,6,0,7,0 },
+		{ 0,4,0,0,7,0,9,0,3 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void veryEasy10(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 8,3,2,5,9,4,6,1,7 },
+		{ 5,1,6,3,8,7,4,2,9 },
+		{ 4,9,7,2,6,1,8,3,5 },
+		{ 1,5,9,6,3,8,7,4,2 },
+		{ 7,6,8,4,1,2,5,9,3 },
+		{ 3,2,4,9,7,5,1,6,8 },
+		{ 9,4,3,8,5,6,2,7,1 },
+		{ 6,8,1,7,2,3,9,5,4 },
+		{ 2,7,5,1,4,9,3,8,6 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 8,0,2,0,0,4,0,1,0 },
+		{ 5,1,0,0,0,7,0,2,0 },
+		{ 0,0,0,0,0,1,0,3,5 },
+		{ 0,0,0,0,0,8,0,0,0 },
+		{ 0,6,0,4,1,0,0,9,3 },
+		{ 0,2,0,9,7,5,1,0,0 },
+		{ 0,4,0,8,0,6,2,7,1 },
+		{ 6,0,0,0,0,3,9,5,4 },
+		{ 0,7,5,0,0,0,3,8,6 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+
+	// Initialize the Answers array and the game array
+	//Games 1-10 level Easy
+	void Easy1(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 8,3,7,5,6,2,9,1,4 },
+		{ 5,1,9,8,7,4,6,2,3 },
+		{ 6,2,4,3,1,9,5,7,8 },
+		{ 9,4,2,1,8,6,3,5,7 },
+		{ 3,8,1,7,2,5,4,6,9 },
+		{ 7,5,6,4,9,3,1,8,2 },
+		{ 1,7,3,6,4,8,2,9,5 },
+		{ 2,6,5,9,3,7,8,4,1 },
+		{ 4,9,8,2,5,1,7,3,6 } };
+
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 8,3,0,0,0,0,9,1,0 },
+		{ 5,0,0,0,0,0,0,2,0 },
+		{ 6,2,4,3,0,0,0,0,8 },
+		{ 9,0,0,0,0,0,3,5,7 },
+		{ 0,0,1,7,0,5,0,0,9 },
+		{ 0,0,0,0,0,0,0,8,0 },
+		{ 0,0,0,0,0,0,0,9,0 },
+		{ 2,6,0,0,3,0,0,0,0 },
+		{ 0,0,0,2,5,0,0,0,6 } };
+
+
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy2(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 9,6,8,5,7,2,1,3,4 },
+		{ 3,1,4,6,8,9,5,2,7 },
+		{ 2,5,7,1,3,4,6,8,9 },
+		{ 7,4,5,2,9,6,8,1,3 },
+		{ 1,2,3,7,5,8,4,9,6 },
+		{ 6,8,9,3,4,1,7,5,2 },
+		{ 5,7,2,4,1,3,9,6,8 },
+		{ 8,3,1,9,6,7,2,4,5 },
+		{ 4,9,6,8,2,5,3,7,1 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,0,0,7,2,0,3,0 },
+		{ 0,1,0,0,0,9,0,0,0 },
+		{ 0,0,0,0,3,0,6,0,0 },
+		{ 0,0,5,0,9,0,8,0,3 },
+		{ 0,0,0,7,0,0,0,0,0 },
+		{ 0,0,0,0,0,0,0,0,0 },
+		{ 0,0,0,0,0,0,0,0,0 },
+		{ 0,0,0,0,0,0,0,0,0 },
+		{ 0,0,0,0,0,0,0,0,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy3(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 8,6,2,9,7,3,1,4,5 },
+		{ 7,5,3,1,2,4,8,6,9 },
+		{ 9,1,4,5,6,8,2,7,3 },
+		{ 1,4,9,7,5,2,3,8,6 },
+		{ 2,7,6,8,3,1,9,5,4 },
+		{ 3,8,5,4,9,6,7,2,1 },
+		{ 4,2,1,6,8,9,5,3,7 },
+		{ 6,3,7,2,1,5,4,9,8 },
+		{ 5,9,8,3,4,7,6,1,2 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 8,0,2,0,0,0,1,4,5 },
+		{ 0,0,3,0,0,0,0,6,9 },
+		{ 0,0,0,0,0,0,2,0,0 },
+		{ 1,0,9,0,0,0,0,8,6 },
+		{ 0,0,6,0,3,0,0,0,0 },
+		{ 0,0,0,0,0,0,7,2,0 },
+		{ 4,0,0,0,0,0,5,0,0 },
+		{ 0,0,0,0,0,0,0,9,0 },
+		{ 0,0,0,0,4,7,0,1,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy4(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 4,3,1,5,9,7,6,8,2 },
+		{ 2,7,9,6,4,8,1,5,3 },
+		{ 6,8,5,1,2,3,9,7,4 },
+		{ 5,6,4,3,1,9,7,2,8 },
+		{ 3,2,7,8,5,6,4,1,9 },
+		{ 9,1,8,4,7,2,5,3,6 },
+		{ 8,4,3,7,6,1,2,9,5 },
+		{ 7,9,6,2,8,5,3,4,1 },
+		{ 1,5,2,9,3,4,8,6,7 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,3,0,5,0,0,6,8,0 },
+		{ 2,0,9,6,0,8,1,0,3 },
+		{ 0,8,0,1,2,3,0,7,0 },
+		{ 0,0,4,0,1,0,7,0,8 },
+		{ 0,0,7,8,0,6,0,0,9 },
+		{ 9,1,8,0,7,0,5,3,6 },
+		{ 8,4,0,7,0,1,0,9,5 },
+		{ 7,0,6,2,0,5,3,0,1 },
+		{ 0,5,2,9,0,4,8,6,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy5(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,8,4,5,6,9,3,7,1 },
+		{ 3,7,6,4,8,1,2,5,9 },
+		{ 1,9,5,7,2,3,8,6,4 },
+		{ 4,6,2,8,3,5,9,1,7 },
+		{ 5,1,8,6,9,7,4,2,3 },
+		{ 7,3,9,1,4,2,5,8,6 },
+		{ 6,4,1,9,5,8,7,3,2 },
+		{ 9,5,3,2,7,6,1,4,8 },
+		{ 8,2,7,3,1,4,6,9,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,0,0,0,0,0,7,1 },
+		{ 3,0,0,0,8,0,0,5,9 },
+		{ 0,0,0,0,2,0,8,0,0 },
+		{ 0,0,2,0,0,0,9,1,0 },
+		{ 0,0,0,6,0,0,0,0,3 },
+		{ 7,0,0,0,4,0,0,0,0 },
+		{ 0,4,0,9,0,0,0,3,2 },
+		{ 0,5,0,0,7,0,0,4,8 },
+		{ 0,2,0,3,0,0,6,0,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy6(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 8,2,1,7,4,5,3,9,6 },
+		{ 7,3,5,9,6,1,2,8,4 },
+		{ 9,4,6,8,2,3,1,5,7 },
+		{ 1,5,7,2,3,6,8,4,9 },
+		{ 2,6,4,1,8,9,5,7,3 },
+		{ 3,8,9,4,5,7,6,1,2 },
+		{ 4,7,2,3,1,8,9,6,5 },
+		{ 5,1,3,6,9,4,7,2,8 },
+		{ 6,9,8,5,7,2,4,3,1 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,2,0,7,0,5,3,9,6 },
+		{ 0,0,0,0,0,0,2,0,0 },
+		{ 9,4,0,0,0,0,1,0,0 },
+		{ 1,0,0,0,3,0,8,4,0 },
+		{ 0,0,0,0,0,0,5,7,3 },
+		{ 0,0,0,4,0,0,0,1,0 },
+		{ 0,0,0,0,0,8,9,6,0 },
+		{ 0,0,0,0,9,0,0,0,0 },
+		{ 6,0,8,5,0,0,0,0,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy7(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 7,5,1,6,4,9,8,3,2 },
+		{ 8,9,2,7,5,3,1,6,4 },
+		{ 3,6,4,2,8,1,5,9,7 },
+		{ 9,1,5,8,6,7,2,4,3 },
+		{ 2,7,3,5,9,4,6,8,1 },
+		{ 4,8,6,1,3,2,7,5,9 },
+		{ 1,4,8,9,7,5,3,2,6 },
+		{ 5,2,9,3,1,6,4,7,8 },
+		{ 6,3,7,4,2,8,9,1,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,1,0,0,0,8,3,0 },
+		{ 0,0,0,7,0,0,0,6,0 },
+		{ 0,0,0,0,0,1,0,0,0 },
+		{ 0,0,0,8,0,0,2,0,0 },
+		{ 0,7,0,5,9,4,0,0,0 },
+		{ 4,0,6,0,0,2,7,0,0 },
+		{ 1,0,0,0,0,0,0,2,6 },
+		{ 0,0,9,3,0,0,0,0,8 },
+		{ 6,0,0,4,0,0,0,1,5 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy8(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 9,3,2,1,8,5,6,4,7 },
+		{ 6,1,4,3,2,7,5,8,9 },
+		{ 8,7,5,9,4,6,1,3,2 },
+		{ 1,5,9,2,6,3,8,7,4 },
+		{ 3,8,7,4,5,1,2,9,6 },
+		{ 4,2,6,7,9,8,3,1,5 },
+		{ 2,9,8,6,3,4,7,5,1 },
+		{ 5,6,1,8,7,9,4,2,3 },
+		{ 7,4,3,5,1,2,9,6,8 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,2,1,0,0,0,0,7 },
+		{ 6,1,0,3,0,7,0,0,9 },
+		{ 0,7,5,0,4,6,1,3,2 },
+		{ 1,0,0,0,6,0,0,7,0 },
+		{ 3,0,7,0,0,1,2,0,6 },
+		{ 0,2,6,7,0,8,0,1,5 },
+		{ 2,0,8,0,0,4,0,5,1 },
+		{ 0,0,0,8,0,0,4,0,3 },
+		{ 0,4,0,5,0,2,9,0,8 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy9(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 8,6,3,1,9,7,4,2,5 },
+		{ 9,5,4,8,2,3,1,6,7 },
+		{ 1,7,2,4,5,6,3,8,9 },
+		{ 2,8,1,6,7,4,5,9,3 },
+		{ 3,4,5,9,1,2,8,7,6 },
+		{ 7,9,6,5,3,8,2,1,4 },
+		{ 4,3,7,2,8,9,6,5,1 },
+		{ 5,2,9,3,6,1,7,4,8 },
+		{ 6,1,8,7,4,5,9,3,2 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,6,3,1,9,0,0,0,5 },
+		{ 0,0,0,0,2,0,0,0,7 },
+		{ 0,0,0,4,0,6,3,8,0 },
+		{ 0,0,1,0,0,0,0,0,3 },
+		{ 0,0,5,0,0,2,0,7,0 },
+		{ 7,0,0,5,3,8,0,0,0 },
+		{ 0,0,0,0,0,0,6,0,1 },
+		{ 0,2,9,0,0,0,0,4,0 },
+		{ 0,0,0,0,0,0,9,0,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Easy10(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 9,3,5,1,6,4,2,8,7 },
+		{ 7,2,6,9,8,3,4,5,1 },
+		{ 1,8,4,7,5,2,6,9,3 },
+		{ 2,6,7,8,9,5,3,1,4 },
+		{ 5,4,9,3,2,1,7,6,8 },
+		{ 8,1,3,6,4,7,5,2,9 },
+		{ 6,5,1,4,7,9,8,3,2 },
+		{ 4,9,8,2,3,6,1,7,5 },
+		{ 3,7,2,5,1,8,9,4,6 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 9,0,5,1,6,4,0,8,7 },
+		{ 0,2,0,0,0,0,0,0,1 },
+		{ 0,0,4,7,0,2,6,9,0 },
+		{ 2,0,7,0,0,5,0,1,0 },
+		{ 0,0,0,0,0,0,0,6,8 },
+		{ 0,1,3,6,4,7,5,2,9 },
+		{ 6,0,1,4,7,9,8,0,0 },
+		{ 4,0,0,0,3,0,0,0,0 },
+		{ 0,0,2,5,0,8,9,4,6 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+
+	// Initialize the Answers array and the game array
+	//Games 1-10 level Medium
+	void Medium1(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,9,1,6,8,3,5,4,7 },
+		{ 3,6,7,2,5,4,8,1,9 },
+		{ 4,5,8,7,9,1,2,6,3 },
+		{ 7,1,4,9,6,2,3,5,8 },
+		{ 9,3,2,5,4,8,6,7,1 },
+		{ 5,8,6,3,1,7,9,2,4 },
+		{ 8,4,3,1,2,6,7,9,5 },
+		{ 1,2,5,8,7,9,4,3,6 },
+		{ 6,7,9,4,3,5,1,8,2 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,0,1,0,0,0,5,0,7 },
+		{ 0,0,0,0,0,4,0,0,9 },
+		{ 4,0,8,0,9,0,2,0,3 },
+		{ 0,1,0,0,6,0,0,5,0 },
+		{ 0,3,2,5,0,8,0,0,0 },
+		{ 0,0,0,3,0,0,0,0,4 },
+		{ 0,0,0,1,0,6,0,0,0 },
+		{ 0,2,0,0,0,0,0,0,6 },
+		{ 0,0,0,0,0,5,0,8,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+	}
+	void Medium2(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 7,8,1,3,2,6,4,9,5 },
+		{ 5,3,9,7,4,1,8,6,2 },
+		{ 6,4,2,9,8,5,7,1,3 },
+		{ 4,6,7,8,9,2,3,5,1 },
+		{ 3,9,8,1,5,4,2,7,6 },
+		{ 1,2,5,6,3,7,9,4,8 },
+		{ 2,7,4,5,1,3,6,8,9 },
+		{ 9,5,3,4,6,8,1,2,7 },
+		{ 8,1,6,2,7,9,5,3,4 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 7,8,0,0,2,6,0,9,5 },
+		{ 5,0,0,0,0,1,0,6,0 },
+		{ 6,0,0,9,8,5,0,1,3 },
+		{ 4,0,7,0,9,2,0,0,1 },
+		{ 3,0,8,1,0,4,0,0,6 },
+		{ 0,2,0,6,0,0,9,4,8 },
+		{ 2,0,4,5,1,3,6,8,0 },
+		{ 9,0,3,0,0,0,0,2,0 },
+		{ 8,1,6,2,0,9,5,3,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium3(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 7,8,1,3,2,6,4,9,5 },
+		{ 5,3,9,7,4,1,8,6,2 },
+		{ 6,4,2,9,8,5,7,1,3 },
+		{ 4,6,7,8,9,2,3,5,1 },
+		{ 3,9,8,1,5,4,2,7,6 },
+		{ 1,2,5,6,3,7,9,4,8 },
+		{ 2,7,4,5,1,3,6,8,9 },
+		{ 9,5,3,4,6,8,1,2,7 },
+		{ 8,1,6,2,7,9,5,3,4 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,8,0,3,0,0,0,0,5 },
+		{ 5,0,9,0,0,0,8,0,2 },
+		{ 0,0,0,0,8,5,7,0,0 },
+		{ 4,0,0,0,0,2,0,5,1 },
+		{ 3,0,8,0,0,0,0,0,6 },
+		{ 0,0,0,0,0,7,9,0,0 },
+		{ 0,7,0,5,1,0,6,0,0 },
+		{ 0,0,0,0,0,0,0,2,0 },
+		{ 0,1,0,0,0,9,5,0,4 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium4(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,9,4,6,8,5,3,1,7 },
+		{ 3,1,5,9,4,7,6,2,8 },
+		{ 7,6,8,1,2,3,5,9,4 },
+		{ 6,7,3,4,5,9,1,8,2 },
+		{ 4,8,9,2,3,1,7,5,6 },
+		{ 5,2,1,8,7,6,4,3,9 },
+		{ 1,4,7,5,9,2,8,6,3 },
+		{ 8,5,2,3,6,4,9,7,1 },
+		{ 9,3,6,7,1,8,2,4,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,9,0,6,8,0,0,1,7 },
+		{ 0,0,5,0,0,0,0,0,8 },
+		{ 0,6,0,0,2,3,5,0,4 },
+		{ 0,0,0,0,0,0,0,8,0 },
+		{ 0,0,0,0,0,1,7,0,6 },
+		{ 0,0,0,0,0,0,4,0,0 },
+		{ 0,4,7,0,9,2,0,0,3 },
+		{ 0,0,0,0,0,0,0,7,1 },
+		{ 0,0,0,7,0,0,0,0,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium5(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 7,2,3,1,5,6,8,9,4 },
+		{ 5,9,1,8,4,2,6,7,3 },
+		{ 4,6,8,7,9,3,2,1,5 },
+		{ 1,5,7,6,8,4,9,3,2 },
+		{ 3,4,9,2,7,1,5,6,8 },
+		{ 2,8,6,5,3,9,1,4,7 },
+		{ 9,1,4,3,2,5,7,8,6 },
+		{ 6,7,5,4,1,8,3,2,9 },
+		{ 8,3,2,9,6,7,4,5,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,0,1,0,0,8,0,4 },
+		{ 5,9,1,0,0,0,6,0,0 },
+		{ 0,6,0,7,0,3,2,0,0 },
+		{ 0,0,7,0,0,4,9,0,0 },
+		{ 0,0,0,0,0,0,5,0,0 },
+		{ 2,8,0,5,0,0,0,0,7 },
+		{ 0,0,0,0,0,5,7,8,0 },
+		{ 0,0,0,4,1,0,0,2,9 },
+		{ 0,3,2,0,0,7,0,0,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium6(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,6,7,3,4,5,8,9,1 },
+		{ 4,5,3,8,1,9,7,2,6 },
+		{ 1,9,8,7,6,2,4,3,5 },
+		{ 3,8,2,1,7,4,6,5,9 },
+		{ 9,4,1,6,5,3,2,7,8 },
+		{ 5,7,6,2,9,8,3,1,4 },
+		{ 8,1,5,4,3,7,9,6,2 },
+		{ 7,2,9,5,8,6,1,4,3 },
+		{ 6,3,4,9,2,1,5,8,7 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,0,7,0,4,0,0,9,1 },
+		{ 0,0,0,0,0,0,7,0,0 },
+		{ 1,0,0,0,0,0,0,3,0 },
+		{ 0,0,2,0,7,0,0,0,9 },
+		{ 0,0,0,0,5,0,0,7,0 },
+		{ 0,0,0,0,9,0,0,0,4 },
+		{ 0,0,5,0,0,7,0,6,0 },
+		{ 0,0,0,0,0,0,1,0,3 },
+		{ 0,0,4,0,2,0,5,0,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium7(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 5,4,6,2,7,3,8,1,9 },
+		{ 9,2,1,6,5,8,3,7,4 },
+		{ 8,7,3,1,4,9,2,5,6 },
+		{ 7,6,9,3,2,5,1,4,8 },
+		{ 1,5,8,4,9,7,6,3,2 },
+		{ 4,3,2,8,6,1,5,9,7 },
+		{ 3,9,7,5,8,6,4,2,1 },
+		{ 6,1,4,7,3,2,9,8,5 },
+		{ 2,8,5,9,1,4,7,6,3 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,0,0,0,0,3,0,0,9 },
+		{ 0,0,0,0,0,0,3,0,4 },
+		{ 8,0,3,1,0,9,0,0,0 },
+		{ 0,0,0,0,0,0,1,0,8 },
+		{ 1,0,0,4,0,0,0,0,2 },
+		{ 0,3,0,0,0,1,0,0,0 },
+		{ 0,0,0,0,8,0,0,0,1 },
+		{ 0,0,0,0,0,2,0,8,0 },
+		{ 0,0,0,0,1,0,0,6,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium8(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 1,8,2,5,9,3,4,6,7 },
+		{ 4,7,5,6,1,2,8,9,3 },
+		{ 3,6,9,4,8,7,2,1,5 },
+		{ 5,1,6,2,3,8,9,7,4 },
+		{ 2,3,7,1,4,9,5,8,6 },
+		{ 9,4,8,7,6,5,3,2,1 },
+		{ 8,2,1,3,7,4,6,5,9 },
+		{ 7,5,3,9,2,6,1,4,8 },
+		{ 6,9,4,8,5,1,7,3,2 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 1,0,2,5,0,3,0,0,0 },
+		{ 0,0,0,0,1,0,0,0,0 },
+		{ 0,6,0,0,0,0,2,0,5 },
+		{ 0,0,6,0,3,0,0,0,4 },
+		{ 2,0,0,0,0,0,5,8,0 },
+		{ 0,0,0,7,0,0,0,0,0 },
+		{ 8,2,1,3,0,0,6,0,0 },
+		{ 0,0,0,0,0,0,1,0,8 },
+		{ 0,0,0,0,5,0,7,0,2 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium9(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 5,6,8,4,3,7,2,9,1 },
+		{ 1,2,7,5,9,8,6,4,3 },
+		{ 9,4,3,2,6,1,5,7,8 },
+		{ 2,8,1,9,4,6,7,3,5 },
+		{ 7,5,9,3,8,2,4,1,6 },
+		{ 6,3,4,7,1,5,9,8,2 },
+		{ 3,9,6,8,2,4,1,5,7 },
+		{ 4,1,5,6,7,3,8,2,9 },
+		{ 8,7,2,1,5,9,3,6,4 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,0,0,0,0,7,2,9,1 },
+		{ 0,0,7,5,0,8,6,0,0 },
+		{ 0,0,0,0,0,0,5,0,8 },
+		{ 0,0,0,0,0,6,0,3,5 },
+		{ 0,0,0,3,0,0,0,1,6 },
+		{ 0,0,0,0,1,5,0,0,0 },
+		{ 0,0,6,8,2,0,1,0,0 },
+		{ 4,1,0,0,0,0,0,0,9 },
+		{ 0,0,0,0,0,9,0,0,4 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Medium10(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,9,4,6,8,5,3,1,7 },
+		{ 3,1,5,9,4,7,6,2,8 },
+		{ 7,6,8,1,2,3,5,9,4 },
+		{ 6,7,3,4,5,9,1,8,2 },
+		{ 4,8,9,2,3,1,7,5,6 },
+		{ 5,2,1,8,7,6,4,3,9 },
+		{ 1,4,7,5,9,2,8,6,3 },
+		{ 8,5,2,3,6,4,9,7,1 },
+		{ 9,3,6,7,1,8,2,4,5 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 2,9,4,0,8,5,3,1,7 },
+		{ 3,0,0,0,4,0,0,0,0 },
+		{ 7,0,0,1,2,3,5,0,4 },
+		{ 0,0,3,0,5,9,1,0,2 },
+		{ 4,0,0,2,3,0,0,0,6 },
+		{ 5,2,1,8,7,6,4,3,9 },
+		{ 1,0,7,5,9,2,8,0,0 },
+		{ 8,0,2,0,0,4,9,0,0 },
+		{ 9,0,6,7,1,8,2,4,5 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+
+	// Initialize the Answers array and the game array
+	//Games 1-10 level Hard
+	void Hard1(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 9,8,2,3,4,6,5,1,7 },
+		{ 1,6,7,9,5,2,8,3,4 },
+		{ 3,4,5,1,8,7,6,2,9 },
+		{ 5,1,4,7,2,3,9,8,6 },
+		{ 2,3,6,4,9,8,7,5,1 },
+		{ 8,7,9,5,6,1,3,4,2 },
+		{ 6,9,8,2,3,4,1,7,5 },
+		{ 4,5,1,8,7,9,2,6,3 },
+		{ 7,2,3,6,1,5,4,9,8 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,0,0,0,0,0,1,7 },
+		{ 0,0,0,9,5,0,0,0,4 },
+		{ 0,4,5,0,0,0,0,0,0 },
+		{ 0,0,4,0,2,0,0,0,6 },
+		{ 0,3,6,0,0,0,0,5,0 },
+		{ 0,7,0,0,0,1,3,4,0 },
+		{ 0,9,8,0,0,0,0,0,5 },
+		{ 0,0,0,8,7,0,0,6,3 },
+		{ 7,0,0,6,0,0,0,9,8 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Hard2(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 5,6,8,4,3,7,2,9,1 },
+		{ 1,2,7,5,9,8,6,4,3 },
+		{ 9,4,3,2,6,1,5,7,8 },
+		{ 2,8,1,9,4,6,7,3,5 },
+		{ 7,5,9,3,8,2,4,1,6 },
+		{ 6,3,4,7,1,5,9,8,2 },
+		{ 3,9,6,8,2,4,1,5,7 },
+		{ 4,1,5,6,7,3,8,2,9 },
+		{ 8,7,2,1,5,9,3,6,4 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,0,0,0,0,7,2,9,1 },
+		{ 0,0,7,5,0,8,0,4,3 },
+		{ 0,0,0,0,6,0,5,0,8 },
+		{ 0,0,0,9,0,6,0,3,5 },
+		{ 0,0,0,3,0,0,0,1,6 },
+		{ 0,0,0,0,1,5,0,0,0 },
+		{ 0,0,6,8,2,0,1,0,0 },
+		{ 4,1,0,0,0,3,0,0,9 },
+		{ 0,0,0,0,0,9,0,0,4 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+	}
+	void Hard3(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 1,8,2,5,9,3,4,6,7 },
+		{ 4,7,5,6,1,2,8,9,3 },
+		{ 3,6,9,4,8,7,2,1,5 },
+		{ 5,1,6,2,3,8,9,7,4 },
+		{ 2,3,7,1,4,9,5,8,6 },
+		{ 9,4,8,7,6,5,3,2,1 },
+		{ 8,2,1,3,7,4,6,5,9 },
+		{ 7,5,3,9,2,6,1,4,8 },
+		{ 6,9,4,8,5,1,7,3,2 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 1,0,2,5,0,3,0,0,0 },
+		{ 0,0,0,0,1,0,0,0,0 },
+		{ 0,6,9,0,0,0,2,0,5 },
+		{ 0,0,6,0,3,0,0,7,4 },
+		{ 2,0,0,1,0,0,5,8,0 },
+		{ 0,0,0,7,0,0,0,0,0 },
+		{ 8,2,1,3,0,0,0,0,0 },
+		{ 0,0,0,0,2,6,1,0,8 },
+		{ 0,0,0,0,5,0,7,0,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Hard4(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 5,4,6,2,7,3,8,1,9 },
+		{ 9,2,1,6,5,8,3,7,4 },
+		{ 8,7,3,1,4,9,2,5,6 },
+		{ 7,6,9,3,2,5,1,4,8 },
+		{ 1,5,8,4,9,7,6,3,2 },
+		{ 4,3,2,8,6,1,5,9,7 },
+		{ 3,9,7,5,8,6,4,2,1 },
+		{ 6,1,4,7,3,2,9,8,5 },
+		{ 2,8,5,9,1,4,7,6,3 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,0,6,0,7,3,0,0,9 },
+		{ 0,0,1,0,0,0,3,0,4 },
+		{ 8,0,3,1,0,0,0,0,6 },
+		{ 0,0,9,0,0,0,1,0,8 },
+		{ 1,0,0,4,0,0,0,0,2 },
+		{ 0,3,0,0,0,1,0,0,0 },
+		{ 0,0,0,0,8,0,0,0,1 },
+		{ 0,0,0,0,3,2,0,8,0 },
+		{ 0,8,0,0,1,0,7,6,0 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+	}
+	void Hard5(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 2,6,7,3,4,5,8,9,1 },
+		{ 4,5,3,8,1,9,7,2,6 },
+		{ 1,9,8,7,6,2,4,3,5 },
+		{ 3,8,2,1,7,4,6,5,9 },
+		{ 9,4,1,6,5,3,2,7,8 },
+		{ 5,7,6,2,9,8,3,1,4 },
+		{ 8,1,5,4,3,7,9,6,2 },
+		{ 7,2,9,5,8,6,1,4,3 },
+		{ 6,3,4,9,2,1,5,8,7 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+
+		int SudArray1[9][9] = { { 0,0,7,0,4,0,0,9,0 },
+		{ 0,5,0,0,1,0,7,0,6 },
+		{ 1,0,0,0,0,0,0,3,0 },
+		{ 0,0,2,0,7,0,0,0,9 },
+		{ 0,0,0,6,0,0,0,0,8 },
+		{ 5,7,0,0,9,0,0,0,4 },
+		{ 0,0,5,0,0,7,0,6,0 },
+		{ 0,0,0,0,0,6,1,0,3 },
+		{ 0,0,4,0,2,0,5,0,0 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Hard6(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 5,7,2,6,3,1,4,8,9 },
+		{ 6,3,8,9,7,4,5,1,2 },
+		{ 4,9,1,8,5,2,6,7,3 },
+		{ 9,2,3,7,4,5,8,6,1 },
+		{ 7,1,6,2,8,9,3,4,5 },
+		{ 8,5,4,3,1,6,9,2,7 },
+		{ 1,6,7,4,9,3,2,5,8 },
+		{ 3,4,5,1,2,8,7,9,6 },
+		{ 2,8,9,5,6,7,1,3,4 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 5,0,2,6,0,1,4,0,9 },
+		{ 0,0,0,0,0,0,0,0,2 },
+		{ 4,0,1,8,0,2,6,0,3 },
+		{ 0,0,3,7,0,0,8,0,1 },
+		{ 0,0,0,0,0,9,0,0,0 },
+		{ 8,5,4,3,0,0,9,2,7 },
+		{ 1,0,0,4,9,0,2,0,8 },
+		{ 0,0,5,0,0,0,0,0,6 },
+		{ 2,0,9,5,0,7,1,3,4 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Hard7(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 1,7,5,4,9,6,3,8,2 },
+		{ 9,2,6,3,8,7,5,1,4 },
+		{ 4,3,8,5,2,1,6,7,9 },
+		{ 5,4,2,6,1,8,9,3,7 },
+		{ 3,1,9,7,4,2,8,5,6 },
+		{ 8,6,7,9,3,5,4,2,1 },
+		{ 2,8,3,1,6,9,7,4,5 },
+		{ 6,5,4,2,7,3,1,9,8 },
+		{ 7,9,1,8,5,4,2,6,3 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 1,0,5,4,0,6,3,0,2 },
+		{ 0,0,0,0,0,7,0,0,4 },
+		{ 4,0,8,5,2,0,6,7,0 },
+		{ 5,0,0,6,1,0,9,0,7 },
+		{ 3,1,0,0,0,0,8,0,0 },
+		{ 0,0,7,0,3,0,0,2,0 },
+		{ 2,0,3,1,0,9,7,0,0 },
+		{ 0,0,0,0,0,0,1,0,8 },
+		{ 7,0,0,8,5,0,0,6,3 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Hard8(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 8,3,2,5,9,4,6,1,7 },
+		{ 5,1,6,3,8,7,4,2,9 },
+		{ 4,9,7,2,6,1,8,3,5 },
+		{ 1,5,9,6,3,8,7,4,2 },
+		{ 7,6,8,4,1,2,5,9,3 },
+		{ 3,2,4,9,7,5,1,6,8 },
+		{ 9,4,3,8,5,6,2,7,1 },
+		{ 6,8,1,7,2,3,9,5,4 },
+		{ 2,7,5,1,4,9,3,8,6 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+		int SudArray1[9][9] = { { 0,0,2,0,0,4,0,1,0 },
+		{ 0,1,0,0,0,7,0,2,0 },
+		{ 0,0,0,0,0,1,0,3,5 },
+		{ 0,0,0,0,0,8,0,0,0 },
+		{ 0,6,0,4,0,0,0,9,3 },
+		{ 0,2,0,9,7,5,1,0,0 },
+		{ 0,4,0,8,0,6,2,0,0 },
+		{ 6,0,0,0,0,3,9,0,0 },
+		{ 0,7,5,0,0,0,3,8,6 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Hard9(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 4,7,3,8,2,9,6,1,5 },
+		{ 6,5,2,3,1,7,8,9,4 },
+		{ 9,1,8,6,4,5,3,2,7 },
+		{ 3,2,1,9,5,4,7,6,8 },
+		{ 8,9,4,7,6,3,2,5,1 },
+		{ 7,6,5,1,8,2,4,3,9 },
+		{ 5,3,7,2,9,8,1,4,6 },
+		{ 1,8,9,4,3,6,5,7,2 },
+		{ 2,4,6,5,7,1,9,8,3 } };
+
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+		int SudArray1[9][9] = { { 0,0,0,0,2,0,6,0,0 },
+		{ 0,0,0,0,0,7,8,0,4 },
+		{ 0,0,0,0,0,5,3,2,7 },
+		{ 0,0,0,0,0,0,0,6,0 },
+		{ 0,0,0,0,0,0,0,5,0 },
+		{ 0,6,5,0,8,2,4,0,0 },
+		{ 5,0,7,0,0,0,1,0,6 },
+		{ 1,0,0,4,0,6,0,7,0 },
+		{ 0,4,0,0,7,0,9,0,3 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+	void Hard10(int AnwArray[9][9], int SudArray[9][9]) {
+		int AnwArray1[9][9] = { { 7,5,1,4,9,6,8,2,3 },
+		{ 9,6,3,8,1,2,4,7,5 },
+		{ 2,4,8,7,3,5,1,6,9 },
+		{ 1,7,9,3,2,4,5,8,6 },
+		{ 4,8,2,5,6,9,7,3,1 },
+		{ 5,3,6,1,8,7,2,9,4 },
+		{ 8,1,5,6,7,3,9,4,2 },
+		{ 6,9,7,2,4,1,3,5,8 },
+		{ 3,2,4,9,5,8,6,1,7 } };
+
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				AnwArray[i][j] = AnwArray1[i][j];
+			}
+		}
+
+
+		int SudArray1[9][9] = { { 7,5,0,0,9,6,0,0,3 },
+		{ 0,0,0,0,0,0,4,0,5 },
+		{ 0,0,0,7,0,5,1,0,9 },
+		{ 0,0,9,0,2,0,5,0,0 },
+		{ 4,8,0,0,0,0,7,0,0 },
+		{ 5,0,6,1,8,0,0,0,4 },
+		{ 0,0,0,0,0,0,9,0,0 },
+		{ 6,0,0,2,4,0,0,0,8 },
+		{ 3,0,4,0,0,8,0,0,7 } };
+		for (int i = 0; i <= 8; i++)
+		{
+			for (int j = 0; j <= 8; j++)
+			{
+				SudArray[i][j] = SudArray1[i][j];
+			}
+		}
+
+	}
+
+
+};
+
+
+
+
+int main()
+{
+
+	sudoku s1; // Declare an instance of the class type soduko
+	s1.StartGame(); // using the class by calling the function name
+
+    return 0;
+}
+
