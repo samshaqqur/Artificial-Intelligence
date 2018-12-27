@@ -1,0 +1,385 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#define MAX_SIZE 10
+using namespace std;
+
+//node class stuture
+class node {
+public:
+	string name;
+	int priority;
+	//'none'
+	// 0
+	node() {
+		name = "none";
+		priority = 0;
+	}
+
+};
+
+
+class HeapBT {
+private:
+	node heapArr[MAX_SIZE];
+	int root, count; // array, value entered in array, count elments
+public:
+
+	//constructor function
+	HeapBT() {
+		for (int x = 0; x < MAX_SIZE; x++) {
+			//pretset every element in array to -1
+			heapArr[x].priority = 0;
+			heapArr[x].name = "none";
+		}
+		//set as 0
+		count = 0;
+	}
+
+	//insert elements to the heap Binary tree
+	void enqueue(node value) {
+		// filling the tree with data values
+		if (count >= MAX_SIZE) {
+			cout << "ARRAY OVERFLOW!\n";
+			return;
+		}
+		//if count is over the max size
+		else {
+			//add one to count
+			count++;
+			//set that orginal value of heaparr index off at 0 to value
+			heapArr[count - 1].priority = value.priority;
+			heapArr[count - 1].name = value.name;
+			cout << "Element Enqueued: " << heapArr[count - 1].name << ", Priority: " << heapArr[count - 1].priority << " \n";
+
+			//then make sure that value isnt bigger than the just indexed
+			shiftUp(count - 1);
+		}
+	}
+
+
+
+	//function swap so we dont have to swap any elements and write code in fother functions
+	void SwapElements(node& A, node& B) {
+		//set the temp int to value one
+		node Temp = A;
+		//then get the value of B to A
+		A = B;
+		//swap values
+		B = Temp;
+	}
+
+
+
+	//sift up used for adding an element and chceking
+	void shiftUp(int index)
+	{
+		//make a parent var and set it to functoin pass parm throug
+		int indexParent = getParentIndex(index);
+		//showing while organizing heap what
+		//cout << "index= " << index << endl;
+		//cout << "parent(index)= " << indexParent<< endl;
+
+		//if index isnt 0 and heap arr indexed parent is less than current
+		if (index != 0 && heapArr[indexParent].priority < heapArr[index].priority) {
+			//then make a temp int var and get the valu of the index of parent
+			int temp = heapArr[indexParent].priority;
+			//then set the index of the parent equal to the index because its bigger
+			heapArr[indexParent] = heapArr[index];
+			//assign the indexparent value from temp to heaparray index
+			heapArr[index].priority = temp;
+			//keep on doing this till all organized
+			//shiftUp(indexParent);
+		}
+	}
+
+
+
+
+	//to delete a value
+	void shiftDown(int index)
+	{
+		//using values of leftchild with index from function
+		int indexLeftChild = getLeftChildIndex(index);
+		//using values of rightchild with index from function
+		int indexRightChild = getRightChildIndex(index);
+		//showing whats happening when deleting a value
+		//cout << "index= " << index << endl;
+		//cout << "left(index)= " << indexLeftChild << endl;
+		//cout << "right(index)= " << indexRightChild << endl;
+		int MaxValueIndex;
+		//Case: #1
+		//means that index the index of right child is a leaf
+		if (indexRightChild >= count)
+		{
+			//if index of left child is bigger than count
+			if (indexLeftChild >= count) {
+				//return because last value added was from right child
+				return;
+			}
+
+			indexLeftChild = indexRightChild;
+		}
+		//Case: #2 if
+		else {
+			//if value from right child is bigger than left child
+			if (heapArr[indexRightChild].priority >= heapArr[indexLeftChild].priority) {
+				//get the index of right child give to temp var hold max index value
+				MaxValueIndex = indexRightChild;
+			}
+			else {
+				MaxValueIndex = indexLeftChild;
+			}
+		}
+		//after both cases we got a max value and its greater than current index
+		if (heapArr[index].priority < heapArr[MaxValueIndex].priority) {
+
+			SwapElements(heapArr[MaxValueIndex], heapArr[index]);
+
+			shiftDown(MaxValueIndex);
+
+
+		}
+	}
+
+	//returning the amount of elements in the list
+	int returnCount() {
+		//if count is empty then return 0
+		if (count == 0) {
+			cout << "There are no elements in the tree!\n";
+		}
+		//otherwise it will return the count
+		return count;
+	}
+
+	//get max value in tree
+	int getMax() {
+		root = heapArr[0].priority;
+		//if is empty
+		if (isEmpty()) {
+			cout << "No elements in the Heap\n";
+			return 0;
+		}
+		else {
+			//using the heap sort the biggest is going be on top
+			return root;
+		}
+	}
+	//remove the root which we have max at root
+	void dequeue() {
+		//if there is default in root
+		if (heapArr[0].name == "none" || heapArr[0].priority == 0) {
+			cout << "Heap Priority Queue is empty!\n";
+			return;
+		}
+		else {
+			//we get highest priority which is root;
+			cout << "highest priority: " << heapArr[0].priority << ", " << heapArr[0].name << " is removed\n";
+			//swap root with last element in array of heap
+			SwapElements(heapArr[0], heapArr[count - 1]);
+			//counted is decremented by one
+			count--;
+			//shiftDown From index 0
+			shiftDown(0);
+			//set the leave node which was root to default
+			heapArr[count].priority = 0;
+			//set the leave node which was root to default
+			heapArr[count].name = "none";
+			//sort the heap so we have the root as the max value
+			heapSort(heapArr, 0, count - 1);
+
+		}
+	}
+
+	//pivot function look for values not in sorted order
+	int pivot(node a[], int first, int last)
+	{
+		//p = first
+		int p = first;
+		//pivator element = index first using priority
+		int pivotElement = a[first].priority;
+		//for loop till last index in array
+		for (int i = first + 1; i <= last; i++)
+		{
+			/* If you want to sort the list in the other order, change "<=" to ">" */
+			if (a[i].priority >= pivotElement)
+			{
+				//keep adding one to first eleemnt
+				p++;
+				//swap the elements if bigger
+				swap(a[i], a[p]);
+			}
+		}
+		swap(a[p], a[first]);
+		return p;
+	}
+
+
+
+
+
+	//sorting my heap
+	void heapSort(node a[], int first, int last)
+	{
+		//if its empty
+		if (isEmpty()) {
+			cout << "no elements!\n";
+			return;
+		}
+		//pivator element
+		int pivotElement;
+		//if first index is less than arrary size then
+		if (first < last)
+		{
+			pivotElement = pivot(a, first, last);
+			//sort heap from first then pivot-1
+			heapSort(a, first, pivotElement - 1);
+			//sort heap from PivaotElement+1
+			heapSort(a, pivotElement + 1, last);
+		}
+	}
+
+	//return parent function
+	int getParentIndex(int i) {
+		if (i == 0) {
+			return 0;
+		}
+		else {
+			i = ((i - 1) / 2);
+		}
+		return i;
+	}
+
+	//right child function
+	int getRightChildIndex(int i) {
+
+		i = (i + 2) + 1;
+
+		return i;
+	}
+	// left parent function
+	int getLeftChildIndex(int i) {
+
+		i = (i + 2) + 2;
+
+		return i;
+	}
+
+
+
+
+	//check if the array is empty for underflow
+	bool isEmpty() {
+		//count of array = 0
+		if (count == 0) {
+			cout << "UNDERFLOW!!\n";
+			return true;
+		}
+		return false;
+	}
+
+
+	//print the elements in the heap
+	void print() {
+		cout << "Heap[0-" << count << "]:\n";
+		for (int x = 0; x<count; x++) {
+			cout << " Name: " << heapArr[x].name << "Priority: " << heapArr[x].priority << "\n";
+		}
+
+	}
+
+
+};
+
+
+
+int main()
+{
+	HeapBT PQ; // instance or my tree class
+
+			   //test array
+	node Trial[15];
+
+	string xname[15] = { "Joe","Fred","Tuyet","Jose","Jing","Xi","Moe","Miko","Vlady","Frank","Anny","Xi","Wali","xChe","xVerra" };
+
+	int prio[15] = { 3,1,9,6,2,5,3,7,8,9,3,2,2,6,8 };
+
+
+	int lenth = sizeof(prio) / 4;
+
+	//setting them equal to the trial
+	for (int x = 0; x<lenth; x++) {
+
+		Trial[x].priority = prio[x];
+		Trial[x].name = xname[x];
+
+	}
+
+	PQ.enqueue(Trial[0]);
+	//fred
+	PQ.enqueue(Trial[1]);
+	//tuyet
+	PQ.enqueue(Trial[2]);
+
+	//delete joe
+	PQ.dequeue();
+
+	//jose
+	PQ.enqueue(Trial[3]);
+	//jing
+	PQ.enqueue(Trial[4]);
+	//xi
+	PQ.enqueue(Trial[5]);
+	//moe
+	PQ.enqueue(Trial[6]);
+
+	//delete fred
+	PQ.dequeue();
+
+	//miko
+	PQ.enqueue(Trial[7]);
+	//vladdy
+	PQ.enqueue(Trial[8]);
+	//frank
+	PQ.enqueue(Trial[9]);
+	//anny
+	PQ.enqueue(Trial[10]);
+
+	//detelet tuyet
+	PQ.dequeue();
+
+
+	//xi
+	PQ.enqueue(Trial[11]);
+	//wali
+	PQ.enqueue(Trial[12]);
+	//xChe
+	PQ.enqueue(Trial[13]);
+	//xverra
+	PQ.enqueue(Trial[14]);
+
+	//jose
+	PQ.dequeue();
+	//jing
+	PQ.dequeue();
+	//xi
+	PQ.dequeue();
+	//moe
+	PQ.dequeue();
+	//miko
+	PQ.dequeue();
+	//vlady
+	PQ.dequeue();
+	//frank
+	PQ.dequeue();
+	//anny
+	PQ.dequeue();
+	//xi
+	PQ.dequeue();
+	//xvera
+	PQ.dequeue();
+
+	PQ.dequeue();
+
+
+}
